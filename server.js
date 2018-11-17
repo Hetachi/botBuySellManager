@@ -13,16 +13,18 @@ bot.on('ready', function(event) {
 });
 
 bot.on('message', function(user, userID, channelID, message, event) {
-    const messageID = event.d.id;
+    if(userID != bot.id) {
+      const messageID = event.d.id;
 
-    if((!message.includes(translation.buy) || !message.includes(translation.sell)) && channelID === config.allowedChannel) {
-      bot.deleteMessage({
-        channelID: channelID,
-        messageID: messageID
-      })
-      bot.sendMessage({
-        to: user,
-        message: "The text channel you are trying to write in is only for "+ translation.buy +" or " + translation.sell
-      })
+      if(!message.includes(translation.buy) && !message.includes(translation.sell) && channelID === config.allowedChannel ) {
+        bot.deleteMessage({
+          channelID: channelID,
+          messageID: messageID
+        })
+        bot.sendMessage({
+          to: userID,
+          message: bot.channels[config.allowedChannel].name+" accepts only "+ translation.buy +" or " + translation.sell + "prefixes, so please follow the rules"
+        })
+      }
     }
 })
